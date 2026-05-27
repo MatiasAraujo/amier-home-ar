@@ -3,140 +3,210 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>Amier Home — AR Preview</title>
+    <title>Amier Home — View in your room (AR)</title>
+    <link rel="icon" href="https://amierhome.com/cdn/shop/files/fav.png?crop=center&height=32&v=1731404506&width=32" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
     <script type="module" src="https://unpkg.com/@google/model-viewer@4.0.0/dist/model-viewer.min.js"></script>
     <style>
       :root {
-        --bg: #0B0F2E;
-        --purple: #8B5CF6;
-        --purple-light: #A78BFA;
-        --purple-deep: #721BA6;
-        --border: rgba(167, 139, 250, 0.15);
-        --text: #E5E7F0;
-        --text-muted: #8B92A8;
+        --bg: #F8F7F1;          /* warm cream — Amier background */
+        --panel: #EFEDE4;       /* slightly deeper cream for media */
+        --ink: #1d1d1b;         /* near-black, matches logo */
+        --oxblood: #3A1212;     /* primary button / accent */
+        --oxblood-hover: #511a1a;
+        --lavender: #A7A2C3;    /* announcement bar / secondary */
+        --border: #E4E3DE;      /* hairline borders */
+        --muted: #8A857E;       /* secondary text */
       }
       * { box-sizing: border-box; margin: 0; padding: 0; }
       html, body { height: 100%; }
       body {
         background: var(--bg);
-        color: var(--text);
+        color: var(--ink);
         font-family: 'Inter', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
         font-weight: 400;
         -webkit-font-smoothing: antialiased;
       }
-      .wrap {
-        max-width: 1100px;
-        margin: 0 auto;
-        padding: 32px 24px 80px;
+      .serif { font-family: 'Cormorant', Georgia, 'Times New Roman', serif; }
+
+      /* ---------- announcement bar ---------- */
+      .announce {
+        background: var(--lavender);
+        color: #2a2740;
+        text-align: center;
+        font-size: 11px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        padding: 8px 16px;
       }
-      header { margin-bottom: 28px; }
-      .eyebrow {
+
+      /* ---------- header ---------- */
+      header.site {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        gap: 16px;
+        padding: 20px 32px;
+        border-bottom: 1px solid var(--border);
+      }
+      nav.primary { display: flex; gap: 22px; }
+      nav.primary a {
+        color: var(--ink);
+        text-decoration: none;
         font-size: 12px;
-        color: var(--purple-light);
         letter-spacing: 0.12em;
         text-transform: uppercase;
-        margin-bottom: 8px;
+        opacity: 0.85;
       }
-      h1 {
-        font-size: 28px;
-        font-weight: 500;
-        margin-bottom: 6px;
-      }
-      .sub { color: var(--text-muted); font-size: 14px; }
+      nav.primary a:hover { opacity: 1; }
+      .brand { display: flex; justify-content: center; }
+      .brand img { height: 22px; width: auto; }
+      .utility { display: flex; gap: 18px; justify-content: flex-end; align-items: center; }
+      .utility .ui { color: var(--ink); opacity: 0.7; }
+      .utility .ui:hover { opacity: 1; }
+      .utility .cur { font-size: 12px; letter-spacing: 0.08em; }
 
+      /* ---------- hero ---------- */
+      .hero { text-align: center; padding: 56px 24px 36px; }
+      .hero .eyebrow {
+        font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
+        color: var(--muted); margin-bottom: 16px;
+      }
+      .hero h1 {
+        font-family: 'Cormorant', Georgia, serif;
+        font-weight: 500;
+        font-size: 52px;
+        line-height: 1.05;
+        letter-spacing: 0.01em;
+      }
+      .hero p {
+        max-width: 560px; margin: 16px auto 0;
+        color: var(--muted); font-size: 16px; line-height: 1.6;
+      }
+
+      /* ---------- brand pattern divider ---------- */
+      .pattern-band { display: block; width: 100%; height: 34px; margin: 8px 0 4px; }
+
+      /* ---------- section heading ---------- */
+      .section-title {
+        text-align: center;
+        font-family: 'Cormorant', Georgia, serif;
+        font-weight: 500;
+        font-size: 13px;
+        letter-spacing: 0.32em;
+        text-transform: uppercase;
+        color: var(--ink);
+        margin: 44px 0 28px;
+      }
+
+      /* ---------- product grid ---------- */
+      .wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px 24px; }
       .grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 20px;
+        gap: 40px 28px;
       }
-      .card {
-        border: 1px solid var(--border);
-        border-radius: 14px;
-        padding: 16px;
-        background: rgba(139, 92, 246, 0.04);
-        display: flex;
-        flex-direction: column;
-      }
-      .card h2 { font-size: 17px; font-weight: 500; margin-bottom: 2px; }
-      .card .cardsub { color: var(--text-muted); font-size: 12px; }
-
-      .card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 10px; }
-      .price { font-size: 18px; font-weight: 500; color: var(--purple-light); white-space: nowrap; }
-      .desc { font-size: 13px; color: var(--text-muted); line-height: 1.55; margin-bottom: 12px; }
+      .product { display: flex; flex-direction: column; }
 
       model-viewer {
         width: 100%;
-        height: 340px;
-        background: #0E1340;
+        height: 380px;
+        background: var(--panel);
         border: 1px solid var(--border);
-        border-radius: 10px;
-        --poster-color: #0E1340;
+        --poster-color: var(--panel);
       }
 
-      .meta {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 8px;
+      .ar-hint {
+        display: inline-flex; align-items: center; gap: 6px;
+        align-self: flex-start;
         margin-top: 12px;
+        font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+        color: var(--oxblood);
       }
-      .stat {
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        padding: 8px 10px;
-        background: rgba(139, 92, 246, 0.04);
-        text-align: center;
+      .ar-hint::before {
+        content: ""; width: 6px; height: 6px; border-radius: 50%;
+        background: var(--oxblood);
       }
-      .stat .k { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
-      .stat .v { font-size: 15px; font-weight: 500; margin-top: 2px; }
 
-      .actions { margin-top: 14px; display: flex; gap: 10px; flex-wrap: wrap; }
-      .btn {
-        display: inline-flex; align-items: center; gap: 8px;
-        background: var(--purple);
-        color: white;
-        border: none;
-        padding: 10px 14px;
-        border-radius: 8px;
-        font-family: inherit;
-        font-size: 13px;
+      .product h2 {
+        font-family: 'Cormorant', Georgia, serif;
         font-weight: 500;
+        font-size: 26px;
+        margin: 6px 0 4px;
+      }
+      .price { font-size: 16px; font-weight: 500; }
+      .tax { font-size: 12px; color: var(--muted); margin-top: 2px; }
+      .dims { font-size: 12px; color: var(--muted); margin-top: 10px; letter-spacing: 0.02em; }
+      .desc { font-size: 13px; color: var(--muted); line-height: 1.6; margin-top: 12px; }
+
+      .btn {
+        display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+        width: 100%;
+        margin-top: 16px;
+        background: var(--oxblood);
+        color: var(--bg);
+        border: none;
+        border-radius: 0;
+        padding: 15px 18px;
+        font-family: 'Inter', sans-serif;
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
         cursor: pointer;
         text-decoration: none;
-        flex: 1;
-        justify-content: center;
+        transition: background 0.18s ease;
       }
-      .btn:hover { background: var(--purple-deep); }
-      .btn.ghost {
-        background: transparent;
-        border: 1px solid var(--border);
-        color: var(--text);
-        flex: 0 0 auto;
+      .btn:hover { background: var(--oxblood-hover); }
+      .linkbtn {
+        margin-top: 10px;
+        background: none; border: none; padding: 0;
+        align-self: center;
+        font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+        color: var(--muted); text-decoration: underline; text-underline-offset: 3px;
+        cursor: pointer;
       }
-      .btn.buy {
-        background: transparent;
-        border: 1px solid var(--purple);
-        color: var(--purple-light);
-      }
-      .btn.buy:hover { background: rgba(139, 92, 246, 0.12); }
+      .linkbtn:hover { color: var(--ink); }
 
-      .note {
-        margin-top: 28px;
-        padding: 14px 16px;
-        border: 1px solid var(--border);
-        border-radius: 10px;
-        font-size: 13px;
-        color: var(--text-muted);
-        line-height: 1.6;
+      /* ---------- trust badges ---------- */
+      .badges {
+        border-top: 1px solid var(--border);
+        margin-top: 56px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        text-align: center;
       }
-      .note strong { color: var(--purple-light); font-weight: 500; }
+      .badge { padding: 28px 16px; border-right: 1px solid var(--border); }
+      .badge:last-child { border-right: none; }
+      .badge svg { width: 26px; height: 26px; stroke: var(--oxblood); fill: none; stroke-width: 1.4; }
+      .badge .t { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; margin-top: 10px; }
+      .badge .s { font-size: 12px; color: var(--muted); margin-top: 4px; line-height: 1.5; }
 
+      /* ---------- footer ---------- */
+      footer.site {
+        border-top: 1px solid var(--border);
+        margin-top: 8px;
+        padding: 34px 24px 48px;
+        text-align: center;
+      }
+      footer.site .note {
+        max-width: 720px; margin: 0 auto;
+        font-size: 12px; color: var(--muted); line-height: 1.7;
+      }
+      footer.site .note strong { color: var(--ink); font-weight: 500; }
+      footer.site .colophon {
+        margin-top: 22px;
+        font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted);
+      }
+      footer.site .colophon b { color: var(--oxblood); font-weight: 500; }
+
+      /* ---------- fit-check modal ---------- */
       .modal-bg {
         position: fixed; inset: 0;
-        background: rgba(11, 15, 46, 0.85);
-        backdrop-filter: blur(8px);
+        background: rgba(29, 29, 27, 0.5);
+        backdrop-filter: blur(4px);
         display: none;
         align-items: center; justify-content: center;
         z-index: 100;
@@ -144,61 +214,124 @@
       }
       .modal-bg.open { display: flex; }
       .modal {
-        background: #0E1340;
+        background: var(--bg);
         border: 1px solid var(--border);
-        border-radius: 14px;
-        padding: 24px;
+        padding: 28px;
         max-width: 420px;
         width: 100%;
       }
-      .modal h2 { font-size: 18px; font-weight: 500; margin-bottom: 8px; }
-      .modal p { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 16px; }
+      .modal h2 { font-family: 'Cormorant', serif; font-weight: 500; font-size: 26px; margin-bottom: 10px; }
+      .modal p { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 16px; }
       .footprint {
-        background: rgba(139, 92, 246, 0.08);
-        border: 1px dashed var(--purple);
-        border-radius: 8px;
-        padding: 12px;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        padding: 14px;
         margin-bottom: 16px;
-        font-size: 13px;
       }
-      .footprint .label { color: var(--purple-light); font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }
-      .footprint .dims { font-size: 16px; font-weight: 500; color: var(--text); }
-      .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+      .footprint .label { color: var(--oxblood); font-size: 10px; text-transform: uppercase; letter-spacing: 0.16em; margin-bottom: 6px; }
+      .footprint .d { font-size: 16px; font-weight: 500; }
+      .modal-actions { display: flex; gap: 12px; }
+      .modal-actions .btn { margin-top: 0; }
+      .btn.ghost { background: var(--bg); color: var(--ink); border: 1px solid var(--border); }
+      .btn.ghost:hover { background: var(--panel); }
+
+      @media (max-width: 720px) {
+        header.site { grid-template-columns: 1fr auto 1fr; padding: 16px; }
+        nav.primary { display: none; }
+        .hero h1 { font-size: 38px; }
+        .badges { grid-template-columns: 1fr; }
+        .badge { border-right: none; border-bottom: 1px solid var(--border); }
+        .badge:last-child { border-bottom: none; }
+      }
     </style>
   </head>
   <body>
-    <div class="wrap">
-      <header>
-        <div class="eyebrow">Meridian Dev — AR Preview</div>
-        <h1>Amier Home</h1>
-        <div class="sub">Generated with image-blaster · each piece scaled to its real-world dimensions</div>
-      </header>
+    <div class="announce">View every piece in your own room — now in augmented reality</div>
 
+    <header class="site">
+      <nav class="primary">
+        <a href="#">Furniture</a>
+        <a href="#">Homewares</a>
+        <a href="#">Artwork</a>
+        <a href="#">About</a>
+      </nav>
+      <div class="brand">
+        <img src="./assets/amier-logo.svg" alt="Amier Home" />
+      </div>
+      <div class="utility">
+        <span class="cur ui">USD</span>
+        <!-- search -->
+        <svg class="ui" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
+        <!-- account -->
+        <svg class="ui" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+        <!-- cart -->
+        <svg class="ui" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 7h12l-1.2 12.5a1 1 0 0 1-1 .9H8.2a1 1 0 0 1-1-.9L6 7Z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="eyebrow">Amier Home · AR Showroom</div>
+      <h1 class="serif">See it in your space<br>before it’s yours</h1>
+      <p>Each piece below is rendered true to its real-world dimensions. Tap “View in your room” on any phone to place it on your floor in augmented reality — no app to install.</p>
+    </section>
+
+    <svg class="pattern-band" viewBox="0 0 1440 34" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs>
+        <pattern id="amierpat" width="160" height="34" patternUnits="userSpaceOnUse">
+          <circle cx="20" cy="17" r="8" fill="#3A1212"/>
+          <rect x="52" y="9" width="16" height="16" transform="rotate(45 60 17)" fill="#A7A2C3"/>
+          <circle cx="100" cy="17" r="8" fill="none" stroke="#3A1212" stroke-width="2.4"/>
+          <path d="M132 25 L140 9 L148 25 Z" fill="#A7A2C3"/>
+        </pattern>
+      </defs>
+      <rect width="1440" height="34" fill="url(#amierpat)"/>
+    </svg>
+
+    <div class="wrap">
+      <div class="section-title serif">The Collection · In AR</div>
       <div class="grid" id="grid"></div>
 
-      <div class="note">
-        <strong>Lighting:</strong> uses your device's real-world light estimation in AR (WebXR on
-        Android, Quick Look on iOS). On desktop, lighting is a neutral studio HDRI.<br>
-        <strong>Fit check:</strong> before AR launches we show the floor footprint each piece needs —
-        true in-room collision detection isn't possible with this viewer (would need a custom WebXR app).<br>
-        <strong>iPhone AR</strong> uses bundled <code>.usdz</code> files (scaled to match each GLB) and
-        launches in Quick Look — no app install needed.
+      <div class="badges">
+        <div class="badge">
+          <svg viewBox="0 0 24 24"><path d="M3 7l9-4 9 4-9 4-9-4Z"/><path d="M3 7v10l9 4 9-4V7"/></svg>
+          <div class="t">True to scale</div>
+          <div class="s">Every model matches the product’s real dimensions</div>
+        </div>
+        <div class="badge">
+          <svg viewBox="0 0 24 24"><rect x="6" y="2.5" width="12" height="19" rx="2"/><line x1="10" y1="18.5" x2="14" y2="18.5"/></svg>
+          <div class="t">No app needed</div>
+          <div class="s">WebXR on Android · Quick Look on iPhone</div>
+        </div>
+        <div class="badge">
+          <svg viewBox="0 0 24 24"><path d="M4 9V5a1 1 0 0 1 1-1h4M20 9V5a1 1 0 0 0-1-1h-4M4 15v4a1 1 0 0 0 1 1h4M20 15v4a1 1 0 0 1-1 1h-4"/></svg>
+          <div class="t">Fit check first</div>
+          <div class="s">See the floor footprint before you place a piece</div>
+        </div>
       </div>
     </div>
 
+    <footer class="site">
+      <div class="note">
+        <strong>Lighting:</strong> uses your device’s real-world light estimation in AR (WebXR on Android,
+        Quick Look on iOS). On desktop, lighting is a neutral studio environment.<br>
+        <strong>iPhone AR</strong> launches in Quick Look from bundled <code>.usdz</code> files — no install needed.
+      </div>
+      <div class="colophon">AR showroom prototype — built for Amier Home by <b>Meridian Dev</b></div>
+    </footer>
+
     <div id="fit-modal" class="modal-bg" role="dialog" aria-modal="true" aria-labelledby="fit-title">
       <div class="modal">
-        <h2 id="fit-title">Check your space first</h2>
+        <h2 id="fit-title" class="serif">Check your space first</h2>
         <p>
-          AR can place the piece anywhere — but it can't tell if it physically fits. Make sure you
-          have at least this much clear floor area before placing it:
+          AR can place a piece anywhere — but it can’t tell whether it physically fits. Make sure you have
+          at least this much clear floor area before placing it:
         </p>
         <div class="footprint">
           <div class="label">Required floor footprint</div>
-          <div class="dims" id="fit-dims"></div>
+          <div class="d" id="fit-dims"></div>
         </div>
-        <p style="margin-bottom: 0;">If the room is too tight, the piece will clip through walls or other objects in AR.</p>
-        <div class="modal-actions" style="margin-top: 16px;">
+        <p style="margin-bottom: 16px;">If the room is too tight, the piece will clip through walls or other objects in AR.</p>
+        <div class="modal-actions">
           <button class="btn ghost" id="fit-cancel">Cancel</button>
           <button class="btn" id="fit-confirm">I have the space</button>
         </div>
@@ -210,36 +343,34 @@
       const FT = 30.48;
       const ft = (cm) => (cm / FT).toFixed(1);
 
+      // Real Amier Home products, mapped to their AR models (scaled to real dimensions).
       const items = [
         {
           id: 'sofa',
-          name: 'Cream Pleated Sofa',
+          name: 'Oblia | Sofa',
           dir: 'cream-pleated-sofa',
           file: '0-cream-pleated-sofa-scaled',
           w: 258, d: 117, h: 75,
           price: '$2,769',
-          desc: 'The Oblia Sofa’s tall curved armrests are a standout design feature, bringing refined elegance and considered craftsmanship. Upholstered in luxurious fabric — comfort without compromising on style.',
-          url: 'https://amierhome.com/products/oblia-sofa',
+          desc: 'Tall curved armrests and soft, rounded forms give the Oblia a sculptural silhouette — refined elegance, upholstered in luxurious fabric.',
         },
         {
           id: 'lamp',
-          name: 'White Sculptural Plaster Lamp',
+          name: 'Jean | Table Light',
           dir: 'white-sculptural-plaster-lamp',
           file: '0-white-sculptural-plaster-lamp-scaled',
           w: 36, d: 36, h: 54,
           price: '$723',
           desc: 'A non-symmetric light on three stable legs — both functional and decorative. Hand-sculpted in plaster to warm any interior with a soft glow.',
-          url: 'https://amierhome.com/products/jean-table-light',
         },
         {
           id: 'vase',
-          name: 'Terracotta Two-Spout Vase',
+          name: 'Couple Vase | Fiber Cement',
           dir: 'terracotta-two-spout-sculptural-vase',
           file: '0-terracotta-two-spout-sculptural-vase-scaled',
           w: 38, d: 15, h: 61,
           price: '$73',
-          desc: 'Speckled texture and soft, rounded shapes form two figures standing close together — a sculptural piece symbolising partnership and harmony.',
-          url: 'https://amierhome.com/products/couple-vase-missing',
+          desc: 'Speckled texture and soft, rounded shapes form two figures standing close together — a contemporary piece symbolising partnership and harmony.',
         },
       ];
 
@@ -251,16 +382,8 @@
         const footprint = `${it.w} cm × ${it.d} cm  (≈ ${ft(it.w)} ft × ${ft(it.d)} ft)`;
 
         const card = document.createElement('div');
-        card.className = 'card';
+        card.className = 'product';
         card.innerHTML = `
-          <div class="card-head">
-            <div>
-              <h2>${it.name}</h2>
-              <div class="cardsub">scaled to real-world dimensions</div>
-            </div>
-            <div class="price">${it.price}</div>
-          </div>
-          <p class="desc">${it.desc}</p>
           <model-viewer
             id="viewer-${it.id}"
             src="${glb}"
@@ -268,20 +391,18 @@
             alt="${it.name}"
             ar ar-modes="webxr scene-viewer quick-look" ar-scale="fixed" xr-environment
             camera-controls touch-action="pan-y"
-            shadow-intensity="1" shadow-softness="1" exposure="1.1"
+            shadow-intensity="1" shadow-softness="1" exposure="1.05"
             environment-image="neutral"
             auto-rotate auto-rotate-delay="3000" rotation-per-second="12deg"
           ></model-viewer>
-          <div class="meta">
-            <div class="stat"><div class="k">Width</div><div class="v">${it.w} cm</div></div>
-            <div class="stat"><div class="k">Depth</div><div class="v">${it.d} cm</div></div>
-            <div class="stat"><div class="k">Height</div><div class="v">${it.h} cm</div></div>
-          </div>
-          <div class="actions">
-            <button class="btn ar-btn" data-viewer="viewer-${it.id}" data-footprint="${footprint}">View in your room</button>
-            <a class="btn buy" href="${it.url}" target="_blank" rel="noopener">Buy</a>
-            <a class="btn ghost" href="${glb}" download title="Download GLB">GLB</a>
-          </div>
+          <span class="ar-hint">View in your room</span>
+          <h2 class="serif">${it.name}</h2>
+          <div class="price">${it.price}</div>
+          <div class="tax">Tax included</div>
+          <div class="dims">${it.w} × ${it.d} × ${it.h} cm  ·  W × D × H</div>
+          <p class="desc">${it.desc}</p>
+          <button class="btn ar-btn" data-viewer="viewer-${it.id}" data-footprint="${footprint}">View in your room</button>
+          <a class="linkbtn" href="${glb}" download title="Download GLB model">Download 3D model</a>
         `;
         grid.appendChild(card);
       }
@@ -324,7 +445,7 @@
             "AR placement needs a phone:\n\n" +
             "• iPhone — open this page in Safari (Quick Look)\n" +
             "• Android — open in Chrome on an ARCore device\n\n" +
-            "On desktop you can rotate and zoom the model, but you can't place it in a room."
+            "On desktop you can rotate and zoom the model, but you can’t place it in a room."
           );
         }
       });
