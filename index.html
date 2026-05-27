@@ -61,7 +61,11 @@
         flex-direction: column;
       }
       .card h2 { font-size: 17px; font-weight: 500; margin-bottom: 2px; }
-      .card .cardsub { color: var(--text-muted); font-size: 12px; margin-bottom: 12px; }
+      .card .cardsub { color: var(--text-muted); font-size: 12px; }
+
+      .card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 10px; }
+      .price { font-size: 18px; font-weight: 500; color: var(--purple-light); white-space: nowrap; }
+      .desc { font-size: 13px; color: var(--text-muted); line-height: 1.55; margin-bottom: 12px; }
 
       model-viewer {
         width: 100%;
@@ -111,6 +115,12 @@
         color: var(--text);
         flex: 0 0 auto;
       }
+      .btn.buy {
+        background: transparent;
+        border: 1px solid var(--purple);
+        color: var(--purple-light);
+      }
+      .btn.buy:hover { background: rgba(139, 92, 246, 0.12); }
 
       .note {
         margin-top: 28px;
@@ -207,6 +217,9 @@
           dir: 'cream-pleated-sofa',
           file: '0-cream-pleated-sofa-scaled',
           w: 258, d: 117, h: 75,
+          price: '$2,769',
+          desc: 'The Oblia Sofa’s tall curved armrests are a standout design feature, bringing refined elegance and considered craftsmanship. Upholstered in luxurious fabric — comfort without compromising on style.',
+          url: 'https://amierhome.com/products/oblia-sofa',
         },
         {
           id: 'lamp',
@@ -214,6 +227,9 @@
           dir: 'white-sculptural-plaster-lamp',
           file: '0-white-sculptural-plaster-lamp-scaled',
           w: 36, d: 36, h: 54,
+          price: '$723',
+          desc: 'A non-symmetric light on three stable legs — both functional and decorative. Hand-sculpted in plaster to warm any interior with a soft glow.',
+          url: 'https://amierhome.com/products/jean-table-light',
         },
         {
           id: 'vase',
@@ -221,6 +237,9 @@
           dir: 'terracotta-two-spout-sculptural-vase',
           file: '0-terracotta-two-spout-sculptural-vase-scaled',
           w: 38, d: 15, h: 61,
+          price: '$73',
+          desc: 'Speckled texture and soft, rounded shapes form two figures standing close together — a sculptural piece symbolising partnership and harmony.',
+          url: 'https://amierhome.com/products/couple-vase-missing',
         },
       ];
 
@@ -234,8 +253,14 @@
         const card = document.createElement('div');
         card.className = 'card';
         card.innerHTML = `
-          <h2>${it.name}</h2>
-          <div class="cardsub">scaled to real-world dimensions</div>
+          <div class="card-head">
+            <div>
+              <h2>${it.name}</h2>
+              <div class="cardsub">scaled to real-world dimensions</div>
+            </div>
+            <div class="price">${it.price}</div>
+          </div>
+          <p class="desc">${it.desc}</p>
           <model-viewer
             id="viewer-${it.id}"
             src="${glb}"
@@ -254,6 +279,7 @@
           </div>
           <div class="actions">
             <button class="btn ar-btn" data-viewer="viewer-${it.id}" data-footprint="${footprint}">View in your room</button>
+            <a class="btn buy" href="${it.url}" target="_blank" rel="noopener">Buy</a>
             <a class="btn ghost" href="${glb}" download title="Download GLB">GLB</a>
           </div>
         `;
