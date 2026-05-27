@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Amier Home — AR Preview</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+    <script type="module" src="https://unpkg.com/@google/model-viewer@4.0.0/dist/model-viewer.min.js"></script>
+    <style>
+      :root {
+        --bg: #0B0F2E;
+        --purple: #8B5CF6;
+        --purple-light: #A78BFA;
+        --purple-deep: #721BA6;
+        --border: rgba(167, 139, 250, 0.15);
+        --text: #E5E7F0;
+        --text-muted: #8B92A8;
+      }
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      html, body { height: 100%; }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: 'Inter', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+        font-weight: 400;
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 32px 24px 80px;
+      }
+      header { margin-bottom: 28px; }
+      .eyebrow {
+        font-size: 12px;
+        color: var(--purple-light);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+      }
+      h1 {
+        font-size: 28px;
+        font-weight: 500;
+        margin-bottom: 6px;
+      }
+      .sub { color: var(--text-muted); font-size: 14px; }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+      }
+      .card {
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 16px;
+        background: rgba(139, 92, 246, 0.04);
+        display: flex;
+        flex-direction: column;
+      }
+      .card h2 { font-size: 17px; font-weight: 500; margin-bottom: 2px; }
+      .card .cardsub { color: var(--text-muted); font-size: 12px; margin-bottom: 12px; }
+
+      model-viewer {
+        width: 100%;
+        height: 340px;
+        background: #0E1340;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        --poster-color: #0E1340;
+      }
+
+      .meta {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+        margin-top: 12px;
+      }
+      .stat {
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 8px 10px;
+        background: rgba(139, 92, 246, 0.04);
+        text-align: center;
+      }
+      .stat .k { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
+      .stat .v { font-size: 15px; font-weight: 500; margin-top: 2px; }
+
+      .actions { margin-top: 14px; display: flex; gap: 10px; flex-wrap: wrap; }
+      .btn {
+        display: inline-flex; align-items: center; gap: 8px;
+        background: var(--purple);
+        color: white;
+        border: none;
+        padding: 10px 14px;
+        border-radius: 8px;
+        font-family: inherit;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        text-decoration: none;
+        flex: 1;
+        justify-content: center;
+      }
+      .btn:hover { background: var(--purple-deep); }
+      .btn.ghost {
+        background: transparent;
+        border: 1px solid var(--border);
+        color: var(--text);
+        flex: 0 0 auto;
+      }
+
+      .note {
+        margin-top: 28px;
+        padding: 14px 16px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        font-size: 13px;
+        color: var(--text-muted);
+        line-height: 1.6;
+      }
+      .note strong { color: var(--purple-light); font-weight: 500; }
+
+      .modal-bg {
+        position: fixed; inset: 0;
+        background: rgba(11, 15, 46, 0.85);
+        backdrop-filter: blur(8px);
+        display: none;
+        align-items: center; justify-content: center;
+        z-index: 100;
+        padding: 20px;
+      }
+      .modal-bg.open { display: flex; }
+      .modal {
+        background: #0E1340;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 24px;
+        max-width: 420px;
+        width: 100%;
+      }
+      .modal h2 { font-size: 18px; font-weight: 500; margin-bottom: 8px; }
+      .modal p { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 16px; }
+      .footprint {
+        background: rgba(139, 92, 246, 0.08);
+        border: 1px dashed var(--purple);
+        border-radius: 8px;
+        padding: 12px;
+        margin-bottom: 16px;
+        font-size: 13px;
+      }
+      .footprint .label { color: var(--purple-light); font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }
+      .footprint .dims { font-size: 16px; font-weight: 500; color: var(--text); }
+      .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <div class="eyebrow">Meridian Dev — AR Preview</div>
+        <h1>Amier Home</h1>
+        <div class="sub">Generated with image-blaster · each piece scaled to its real-world dimensions</div>
+      </header>
+
+      <div class="grid" id="grid"></div>
+
+      <div class="note">
+        <strong>Lighting:</strong> uses your device's real-world light estimation in AR (WebXR on
+        Android, Quick Look on iOS). On desktop, lighting is a neutral studio HDRI.<br>
+        <strong>Fit check:</strong> before AR launches we show the floor footprint each piece needs —
+        true in-room collision detection isn't possible with this viewer (would need a custom WebXR app).<br>
+        <strong>iPhone AR</strong> uses bundled <code>.usdz</code> files (scaled to match each GLB) and
+        launches in Quick Look — no app install needed.
+      </div>
+    </div>
+
+    <div id="fit-modal" class="modal-bg" role="dialog" aria-modal="true" aria-labelledby="fit-title">
+      <div class="modal">
+        <h2 id="fit-title">Check your space first</h2>
+        <p>
+          AR can place the piece anywhere — but it can't tell if it physically fits. Make sure you
+          have at least this much clear floor area before placing it:
+        </p>
+        <div class="footprint">
+          <div class="label">Required floor footprint</div>
+          <div class="dims" id="fit-dims"></div>
+        </div>
+        <p style="margin-bottom: 0;">If the room is too tight, the piece will clip through walls or other objects in AR.</p>
+        <div class="modal-actions" style="margin-top: 16px;">
+          <button class="btn ghost" id="fit-cancel">Cancel</button>
+          <button class="btn" id="fit-confirm">I have the space</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const BASE = './models';
+      const FT = 30.48;
+      const ft = (cm) => (cm / FT).toFixed(1);
+
+      const items = [
+        {
+          id: 'sofa',
+          name: 'Cream Pleated Sofa',
+          dir: 'cream-pleated-sofa',
+          file: '0-cream-pleated-sofa-scaled',
+          w: 258, d: 117, h: 75,
+        },
+        {
+          id: 'lamp',
+          name: 'White Sculptural Plaster Lamp',
+          dir: 'white-sculptural-plaster-lamp',
+          file: '0-white-sculptural-plaster-lamp-scaled',
+          w: 36, d: 36, h: 54,
+        },
+        {
+          id: 'vase',
+          name: 'Terracotta Two-Spout Vase',
+          dir: 'terracotta-two-spout-sculptural-vase',
+          file: '0-terracotta-two-spout-sculptural-vase-scaled',
+          w: 38, d: 15, h: 61,
+        },
+      ];
+
+      const grid = document.getElementById('grid');
+
+      for (const it of items) {
+        const glb = `${BASE}/${it.dir}/${it.file}-opt.glb`;   // optimized (2K webp) for fast mobile load
+        const usdz = `${BASE}/${it.dir}/${it.file}.usdz`;       // iOS Quick Look
+        const footprint = `${it.w} cm × ${it.d} cm  (≈ ${ft(it.w)} ft × ${ft(it.d)} ft)`;
+
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <h2>${it.name}</h2>
+          <div class="cardsub">scaled to real-world dimensions</div>
+          <model-viewer
+            id="viewer-${it.id}"
+            src="${glb}"
+            ios-src="${usdz}"
+            alt="${it.name}"
+            ar ar-modes="webxr scene-viewer quick-look" ar-scale="fixed" xr-environment
+            camera-controls touch-action="pan-y"
+            shadow-intensity="1" shadow-softness="1" exposure="1.1"
+            environment-image="neutral"
+            auto-rotate auto-rotate-delay="3000" rotation-per-second="12deg"
+          ></model-viewer>
+          <div class="meta">
+            <div class="stat"><div class="k">Width</div><div class="v">${it.w} cm</div></div>
+            <div class="stat"><div class="k">Depth</div><div class="v">${it.d} cm</div></div>
+            <div class="stat"><div class="k">Height</div><div class="v">${it.h} cm</div></div>
+          </div>
+          <div class="actions">
+            <button class="btn ar-btn" data-viewer="viewer-${it.id}" data-footprint="${footprint}">View in your room</button>
+            <a class="btn ghost" href="${glb}" download title="Download GLB">GLB</a>
+          </div>
+        `;
+        grid.appendChild(card);
+      }
+
+      const modal = document.getElementById('fit-modal');
+      const fitDims = document.getElementById('fit-dims');
+      let pendingViewer = null;
+
+      document.querySelectorAll('.ar-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          pendingViewer = document.getElementById(btn.dataset.viewer);
+          fitDims.textContent = btn.dataset.footprint;
+          modal.classList.add('open');
+        });
+      });
+
+      function closeModal() { modal.classList.remove('open'); }
+      document.getElementById('fit-cancel').addEventListener('click', () => { pendingViewer = null; closeModal(); });
+
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
+        || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+      document.getElementById('fit-confirm').addEventListener('click', async () => {
+        const v = pendingViewer;
+        closeModal();
+        if (!v) return;
+
+        // model-viewer reports whether in-page AR can actually launch on this device.
+        if (v.canActivateAR) {
+          try { await v.activateAR(); return; } catch (e) { /* fall through to fallback */ }
+        }
+
+        // Fallback: on iOS, navigating straight to the .usdz forces Quick Look
+        // (works even in non-Safari iOS browsers). Otherwise explain why.
+        const usdz = v.getAttribute('ios-src');
+        if (isIOS && usdz) {
+          window.location.href = usdz;
+        } else {
+          alert(
+            "AR placement needs a phone:\n\n" +
+            "• iPhone — open this page in Safari (Quick Look)\n" +
+            "• Android — open in Chrome on an ARCore device\n\n" +
+            "On desktop you can rotate and zoom the model, but you can't place it in a room."
+          );
+        }
+      });
+
+      modal.addEventListener('click', (e) => { if (e.target === modal) { pendingViewer = null; closeModal(); } });
+
+      // Surface AR launch failures instead of failing silently.
+      document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('model-viewer').forEach((v) => {
+          v.addEventListener('ar-status', (e) => {
+            if (e.detail.status === 'failed') console.warn('AR failed for', v.id);
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
